@@ -15,7 +15,7 @@ An interactive architecture map of an AI-powered, multi-brand SEO content engine
 
 ## How it works (in plain language)
 
-Picture a factory that runs itself, where AI does the heavy lifting and a strict rulebook keeps it honest. Below is the full journey of a single article, from idea to a published page. The point is not that AI writes an article. The point is the system around it that makes the output trustworthy and repeatable at scale.
+Below is the full journey of a single article, from idea to a published page. The point is not that AI writes an article. The point is the system around it that makes the output trustworthy and repeatable at scale.
 
 **1. Learn the brand, then learn every rival.**
 Before a word is written, the system studies the product's own website and researches each competitor, then writes all of that up as reference files. Everything downstream reads these files, so every article speaks in one consistent voice and never guesses about the product or its competitors.
