@@ -2,9 +2,16 @@
 
 An interactive architecture map of an AI-powered, multi-brand SEO content engine I designed and built. It shows how an AI agent handles every judgment step (research, topical planning, writing, adversarial review) against versioned rulebooks, while deterministic code handles everything exact (spec conversion, style validation, image generation, and publishing).
 
-**Live, interactive version:** https://salehin96.github.io/content-engine/
+**Live:** https://salehin96.github.io/content-engine/
 
-> Hover or tap any node to trace exactly what it reads and writes. The diagram is a sanitized, high-level overview; proprietary methodology, client names, and internal details are intentionally abstracted.
+Two views of the same system:
+
+| View | What it answers | Link |
+| --- | --- | --- |
+| **Interactive system map** | How the whole architecture fits together. Hover or tap any node to trace what it reads and writes. | [content-engine.html](https://salehin96.github.io/content-engine/content-engine.html) |
+| **Phase dependency map** | What each individual phase actually reads, and why. Nodes are colored by kind (engine file, tool, external input) and badged for whether a file is read in full or only in part. | [dependency-map.html](https://salehin96.github.io/content-engine/dependency-map.html) |
+
+> Both diagrams are sanitized, high-level overviews; proprietary methodology, client names, and internal details are intentionally abstracted.
 
 ## What it demonstrates
 
@@ -15,7 +22,7 @@ An interactive architecture map of an AI-powered, multi-brand SEO content engine
 
 ## How it works (in plain language)
 
-Below is the full journey of a single article, from idea to a published page. The point is not that AI writes an article. The point is the system around it that makes the output trustworthy and repeatable at scale.
+Picture a factory that runs itself, where AI does the heavy lifting and a strict rulebook keeps it honest. Below is the full journey of a single article, from idea to a published page. The point is not that AI writes an article. The point is the system around it that makes the output trustworthy and repeatable at scale.
 
 **1. Learn the brand, then learn every rival.**
 Before a word is written, the system studies the product's own website and researches each competitor, then writes all of that up as reference files. Everything downstream reads these files, so every article speaks in one consistent voice and never guesses about the product or its competitors.
@@ -38,9 +45,29 @@ The finished article is converted to the website's format and published automati
 **Why this is genuinely hard.**
 Any one of these steps is easy alone. Doing all of them together, across hundreds of articles and multiple separate brands, without quality decaying, is the hard part: coordinating several AIs so they do not duplicate work, keeping hundreds of pages factually consistent with each other, stopping AI from inventing facts, enforcing the rules by machine instead of trust, and keeping each brand's content fully separate. That coordination layer, not the writing, is the system.
 
+## Reading the dependency map
+
+The dependency map answers a different question than the system map. Instead of showing the whole architecture at once, it walks the seven phases in order and shows, for each one, **only the inputs that phase consumes directly**. Nodes are color-coded so a tool and a produced file never look alike:
+
+- **Engine file** (blue), a file the engine itself produced earlier in the pipeline
+- **Tool** (amber), an external service or CLI the phase calls
+- **External input** (teal), the live web: a website, search results, review platforms
+- **Gate** (dashed), something that must exist before the phase may run, but whose contents are not read
+
+Each file node also carries a badge: `full` (the whole file is read), `part` (only named sections, with the reason given), or `gate`. The content phase is split further, because an evaluative page (a review, comparison, alternative, or best-of list) reads four sources that an informational page (a what-is or how-to) never touches.
+
+## Repository contents
+
+| File | What it is |
+| --- | --- |
+| `index.html` | Landing page linking both views |
+| `content-engine.html` | The interactive system map |
+| `dependency-map.html` | The phase dependency map |
+| `og-cover.png` | Social preview image |
+
 ## How to view
 
-Open the live link above in any modern browser. It is a single self-contained page, no build step and no dependencies.
+Open the live link above in any modern browser. Every page is a single self-contained file: no build step, no dependencies, no tracking.
 
 ## About
 

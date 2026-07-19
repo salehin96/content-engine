@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content Engine, Dependency Map | Riad Us Salehin</title>
+<meta name="description" content="A phase-by-phase dependency map of an AI-orchestrated SEO content engine: what every stage reads, which tools it calls, and how evaluative content differs from informational content.">
+<meta name="author" content="Riad Us Salehin">
+<link rel="canonical" href="https://salehin96.github.io/content-engine/dependency-map.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI-Orchestrated SEO Content Engine">
+<meta property="og:title" content="Content Engine, Dependency Map">
+<meta property="og:description" content="A phase-by-phase dependency map of an AI-orchestrated SEO content engine: what every stage reads, which tools it calls, and how evaluative content differs from informational content.">
+<meta property="og:url" content="https://salehin96.github.io/content-engine/dependency-map.html">
+<meta property="og:image" content="https://salehin96.github.io/content-engine/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Content Engine, Dependency Map">
+<meta name="twitter:description" content="A phase-by-phase dependency map of an AI-orchestrated SEO content engine: what every stage reads, which tools it calls, and how evaluative content differs from informational content.">
+<meta name="twitter:image" content="https://salehin96.github.io/content-engine/og-cover.png">
+<style>
+  :root{
+    --bg:#f4f5f9; --panel:#ffffff; --panel2:#fbfcfe; --ink:#161a25; --ink2:#48506a;
+    --hair:#e2e6f0; --hair2:#eef1f7;
+    --phase:#4f46e5; --phase-soft:#ecebfe; --phase-ink:#3d33cf;
+    --engine:#2563c9; --engine-soft:#e7f0fd; --engine-ink:#1d4fa8;
+    --tool:#b8730a; --tool-soft:#fbeed6; --tool-ink:#8a5606;
+    --ext:#0d8a7a; --ext-soft:#d9f2ee; --ext-ink:#0a6c60;
+    --gate:#64708a; --gate-soft:#eceff4; --gate-ink:#4b566d;
+    --eval:#c0398b; --eval-soft:#fbe6f2; --eval-ink:#9c2c70;
+    --mono:ui-monospace,"Cascadia Code","SF Mono",Menlo,Consolas,monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    --maxw:1180px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0b0e16; --panel:#141926; --panel2:#111623; --ink:#eef1f8; --ink2:#9aa5c0;
+      --hair:#262e42; --hair2:#1c2333;
+      --phase:#8b83ff; --phase-soft:#211f4a; --phase-ink:#b7b1ff;
+      --engine:#6ea8ff; --engine-soft:#132743; --engine-ink:#9cc4ff;
+      --tool:#e6a94b; --tool-soft:#3a2a10; --tool-ink:#f2c479;
+      --ext:#3bd0ba; --ext-soft:#0e332e; --ext-ink:#6fe0ce;
+      --gate:#93a0bd; --gate-soft:#1d2334; --gate-ink:#aeb9d4;
+      --eval:#f07ac0; --eval-soft:#3a1230; --eval-ink:#f7a6d6;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f5f9; --panel:#ffffff; --panel2:#fbfcfe; --ink:#161a25; --ink2:#48506a;
+    --hair:#e2e6f0; --hair2:#eef1f7;
+    --phase:#4f46e5; --phase-soft:#ecebfe; --phase-ink:#3d33cf;
+    --engine:#2563c9; --engine-soft:#e7f0fd; --engine-ink:#1d4fa8;
+    --tool:#b8730a; --tool-soft:#fbeed6; --tool-ink:#8a5606;
+    --ext:#0d8a7a; --ext-soft:#d9f2ee; --ext-ink:#0a6c60;
+    --gate:#64708a; --gate-soft:#eceff4; --gate-ink:#4b566d;
+    --eval:#c0398b; --eval-soft:#fbe6f2; --eval-ink:#9c2c70;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0b0e16; --panel:#141926; --panel2:#111623; --ink:#eef1f8; --ink2:#9aa5c0;
+    --hair:#262e42; --hair2:#1c2333;
+    --phase:#8b83ff; --phase-soft:#211f4a; --phase-ink:#b7b1ff;
+    --engine:#6ea8ff; --engine-soft:#132743; --engine-ink:#9cc4ff;
+    --tool:#e6a94b; --tool-soft:#3a2a10; --tool-ink:#f2c479;
+    --ext:#3bd0ba; --ext-soft:#0e332e; --ext-ink:#6fe0ce;
+    --gate:#93a0bd; --gate-soft:#1d2334; --gate-ink:#aeb9d4;
+    --eval:#f07ac0; --eval-soft:#3a1230; --eval-ink:#f7a6d6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:48px 24px 96px}
+
+  header.top{margin-bottom:8px}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--phase);
+    font-weight:700;margin:0 0 10px}
+  h1{font-size:clamp(28px,4.2vw,44px);line-height:1.05;letter-spacing:-.02em;margin:0 0 12px;
+    font-weight:800;text-wrap:balance}
+  .lede{font-size:17px;color:var(--ink2);max-width:70ch;margin:0}
+
+  /* legend */
+  .legend{margin:26px 0 8px;background:var(--panel);border:1px solid var(--hair);border-radius:14px;
+    padding:16px 18px;display:flex;flex-wrap:wrap;gap:18px 26px;align-items:flex-start}
+  .legend h2{width:100%;margin:0 0 2px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink2);font-weight:700}
+  .lg{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--ink2)}
+  .swatch{width:14px;height:14px;border-radius:4px;flex:none;border:1.5px solid transparent}
+  .sw-engine{background:var(--engine-soft);border-color:var(--engine)}
+  .sw-tool{background:var(--tool-soft);border-color:var(--tool)}
+  .sw-ext{background:var(--ext-soft);border-color:var(--ext)}
+  .sw-gate{background:var(--gate-soft);border-color:var(--gate);border-style:dashed}
+  .sw-phase{background:var(--phase-soft);border-color:var(--phase)}
+  .lg b{color:var(--ink);font-weight:650}
+  .badges{width:100%;border-top:1px dashed var(--hair);padding-top:12px;margin-top:2px;
+    display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--ink2)}
+  .rb{display:inline-flex;align-items:center;gap:7px}
+  .badge{font:600 10.5px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;
+    padding:3px 6px;border-radius:5px;border:1px solid var(--hair)}
+  .b-full{color:var(--engine-ink);background:var(--engine-soft);border-color:var(--engine)}
+  .b-part{color:var(--ink2);background:var(--hair2);border-color:var(--hair)}
+  .b-gate{color:var(--gate-ink);background:var(--gate-soft);border-color:var(--gate)}
+  .b-out{color:var(--phase-ink);background:var(--phase-soft);border-color:var(--phase)}
+
+  /* phase pipeline */
+  .flow{margin-top:26px;display:flex;flex-direction:column;align-items:stretch;gap:0}
+  .arrow{align-self:center;color:var(--phase);opacity:.55;font-size:22px;line-height:1;margin:10px 0}
+  .phase{background:var(--panel);border:1px solid var(--hair);border-radius:16px;overflow:hidden;
+    box-shadow:0 1px 0 rgba(20,26,44,.03)}
+  .phead{display:flex;align-items:baseline;gap:14px;padding:18px 22px 16px;
+    border-left:5px solid var(--phase);background:
+      linear-gradient(90deg,var(--phase-soft),transparent 62%)}
+  .pnum{font:800 13px/1 var(--mono);color:var(--phase);background:var(--panel);
+    border:1.5px solid var(--phase);border-radius:8px;padding:6px 9px;flex:none;
+    align-self:center}
+  .pttl{flex:1}
+  .pttl h3{margin:0;font-size:20px;letter-spacing:-.01em;font-weight:750}
+  .produces{margin:5px 0 0;font-size:13.5px;color:var(--ink2)}
+  .produces code{font:600 12.5px/1.4 var(--mono);color:var(--phase-ink);background:var(--phase-soft);
+    padding:2px 6px;border-radius:5px}
+  .pbody{padding:16px 18px 20px}
+  .inlbl{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);
+    font-weight:700;margin:2px 4px 12px;display:flex;align-items:center;gap:9px}
+  .inlbl::before{content:"";height:1px;width:16px;background:var(--hair);flex:none}
+
+  .grp{margin-top:6px}
+  .grp + .grp{margin-top:18px;padding-top:16px;border-top:1px dashed var(--hair)}
+  .grp-h{font-size:12.5px;font-weight:700;margin:0 0 11px;display:flex;align-items:center;gap:9px}
+  .grp-h .tag{font:600 10px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;
+    padding:3px 7px;border-radius:20px}
+  .tag-eval{color:var(--eval-ink);background:var(--eval-soft);border:1px solid var(--eval)}
+  .tag-info{color:var(--ext-ink);background:var(--ext-soft);border:1px solid var(--ext)}
+  .grp-note{font-size:13px;color:var(--ink2);margin:-4px 0 12px}
+
+  .nodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:10px}
+  .node{border:1.5px solid var(--hair);border-left-width:4px;border-radius:11px;padding:11px 13px;
+    background:var(--panel2);position:relative}
+  .node .nm{font:600 13px/1.35 var(--mono);color:var(--ink);word-break:break-word;
+    display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+  .node .why{font-size:12.5px;color:var(--ink2);margin-top:6px;line-height:1.42}
+  .node.engine{border-color:var(--engine);background:color-mix(in srgb,var(--engine-soft) 42%,var(--panel2))}
+  .node.tool{border-color:var(--tool);background:color-mix(in srgb,var(--tool-soft) 40%,var(--panel2))}
+  .node.ext{border-color:var(--ext);background:color-mix(in srgb,var(--ext-soft) 42%,var(--panel2))}
+  .node.gate{border-color:var(--gate);border-left-style:dashed;background:var(--gate-soft)}
+  .rbadge{font:600 9.5px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;
+    padding:3px 5px;border-radius:5px;flex:none;border:1px solid transparent;margin-top:1px}
+  .r-full{color:var(--engine-ink);background:var(--engine-soft);border-color:var(--engine)}
+  .r-part{color:var(--ink2);background:var(--hair2);border-color:var(--hair)}
+  .r-gate{color:var(--gate-ink);background:var(--gate-soft);border-color:var(--gate)}
+  .r-out{color:var(--phase-ink);background:var(--phase-soft);border-color:var(--phase)}
+  .cat{position:absolute;top:-8px;right:11px;font:600 9px/1 var(--mono);letter-spacing:.08em;
+    text-transform:uppercase;padding:2px 6px;border-radius:20px;background:var(--panel)}
+  .cat.engine{color:var(--engine-ink);border:1px solid var(--engine)}
+  .cat.tool{color:var(--tool-ink);border:1px solid var(--tool)}
+  .cat.ext{color:var(--ext-ink);border:1px solid var(--ext)}
+  .cat.gate{color:var(--gate-ink);border:1px dashed var(--gate)}
+
+  .pnote{margin:16px 4px 0;font-size:12.5px;color:var(--ink2);background:var(--hair2);
+    border-radius:9px;padding:10px 13px;border-left:3px solid var(--gate)}
+  .pnote b{color:var(--ink)}
+
+  footer.foot{margin-top:34px;border-top:1px solid var(--hair);padding-top:22px;
+    font-size:13px;color:var(--ink2)}
+  footer.foot h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);
+    margin:0 0 10px}
+  footer.foot p{margin:0 0 10px;max-width:78ch}
+  footer.foot code{font:600 12px/1.4 var(--mono);color:var(--ink);background:var(--hair2);
+    padding:2px 5px;border-radius:5px}
+  .disc{background:var(--panel);border:1px solid var(--hair);border-left:3px solid var(--tool);
+    border-radius:9px;padding:12px 15px;margin-top:6px}
+  .disc b{color:var(--tool-ink)}
+
+  @media (max-width:560px){
+    .wrap{padding:32px 15px 72px}
+    .nodes{grid-template-columns:1fr}
+    .phead{flex-wrap:wrap}
+  }
+
+  /* site chrome */
+  .sitenav{max-width:var(--maxw);margin:0 auto;padding:20px 24px 0;display:flex;flex-wrap:wrap;
+    gap:10px 18px;align-items:center;justify-content:space-between}
+  .sitenav a{color:var(--ink2);text-decoration:none;font-size:13.5px;border-bottom:1px solid transparent}
+  .sitenav a:hover,.sitenav a:focus-visible{color:var(--phase);border-bottom-color:var(--phase)}
+  .sitenav .brand{font-weight:750;color:var(--ink);font-size:14px;letter-spacing:-.01em}
+  .navlinks{display:flex;gap:16px;flex-wrap:wrap}
+  .sitefoot{max-width:var(--maxw);margin:0 auto;padding:0 24px 64px}
+  .sitefoot .card{background:var(--panel);border:1px solid var(--hair);border-radius:14px;
+    padding:20px 22px;display:flex;flex-wrap:wrap;gap:14px 34px;align-items:flex-start;
+    justify-content:space-between}
+  .sitefoot p{margin:0;font-size:14px;color:var(--ink2);max-width:56ch}
+  .sitefoot b{color:var(--ink)}
+  .sitefoot .links{display:flex;flex-direction:column;gap:7px;font-size:13.5px}
+  .sitefoot .links a{color:var(--phase);text-decoration:none}
+  .sitefoot .links a:hover,.sitefoot .links a:focus-visible{text-decoration:underline}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--phase);outline-offset:3px;border-radius:4px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  @media (max-width:560px){.sitenav,.sitefoot{padding-left:15px;padding-right:15px}}
+</style>
+</head>
+<body>
+<nav class="sitenav">
+  <span class="brand">Riad Us Salehin &middot; Content Engine</span>
+  <span class="navlinks">
+    <a href="./index.html">Overview</a>
+    <a href="./content-engine.html">System map</a>
+    <a href="./dependency-map.html" aria-current="page">Dependency map</a>
+  </span>
+</nav>
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">SEO Content Engine &middot; Dependency Map</p>
+    <h1>What each phase actually reads, and why</h1>
+    <p class="lede">Seven phases run in order, brand foundation through article images. Each box shows
+      only the inputs that phase consumes directly, not everything downstream inherits. Nodes are
+      colored by kind so an engine file and a tool never look alike, and each carries a badge for how
+      much of it is read.</p>
+  </header>
+
+  <div class="legend">
+    <h2>Node kinds</h2>
+    <div class="lg"><span class="swatch sw-engine"></span><b>Engine file</b>&nbsp;a repo file the engine produced</div>
+    <div class="lg"><span class="swatch sw-tool"></span><b>Tool</b>&nbsp;an MCP, service, or CLI</div>
+    <div class="lg"><span class="swatch sw-ext"></span><b>External input</b>&nbsp;the live web / research</div>
+    <div class="lg"><span class="swatch sw-gate"></span><b>Gate</b>&nbsp;must exist, not read as content</div>
+    <div class="badges">
+      <span class="rb"><span class="badge b-full">full</span> reads the whole file</span>
+      <span class="rb"><span class="badge b-part">part</span> reads only named sections</span>
+      <span class="rb"><span class="badge b-gate">gate</span> presence required, content not consumed</span>
+      <span class="rb"><span class="badge b-out">out</span> produced by the phase, not read</span>
+    </div>
+  </div>
+
+  <div class="flow" id="flow"></div>
+
+  <footer class="foot">
+    <h2>Reading notes</h2>
+    <p><b>Shared rule files are omitted on purpose.</b> Every phase also loads the same governance set,
+      <code>operating-principles.md</code>, <code>tool-capability-map.md</code>,
+      <code>tool-fallback-reference.md</code>, <code>subagent-patterns.md</code>, and the schemas. They
+      govern <i>how</i> a phase runs, not <i>what</i> it is about, so they are left off the nodes to keep
+      each phase's real data inputs legible.</p>
+    <p><b>The fetch ladder</b> shown as one tool is really a fallback chain: WebFetch, then Firecrawl,
+      then Claude in Chrome (Reddit fetched with a <code>.json</code> suffix), then ask the user to paste.</p>
+    <p><b>Lifecycle and inventories are review-owned.</b> The topical map's status columns, the entity
+      inventory, and the linking-anchor inventory are written by the orchestrator and the review phase,
+      never by the phase that merely reads them.</p>
+    <div class="disc">
+      <b>One accuracy flag.</b> The project's control file (CLAUDE.md) says the topical map reads
+      "all competitor foundations, in full." The topical-map runbook itself does not: it derives
+      competitors from brand-foundation Section 9 plus Ahrefs, and treats competitor foundation only as
+      an upstream prerequisite. The chart follows the runbook (the real procedure) and marks it a gate.
+    </div>
+  </footer>
+</div>
+
+<div class="sitefoot"><div class="card">
+  <p><b>I build AI-powered SEO content systems for early-stage B2B SaaS:</b> full-scale SEO, semantic
+  topical maps, content briefs, content writing, and end-to-end content automation. This map is a
+  sanitized view of the architecture; client names and proprietary methodology are abstracted.</p>
+  <span class="links">
+    <a href="https://linkedin.com/in/riad-us-salehin/">LinkedIn</a>
+    <a href="https://calendly.com/riad-us-salehin/30min">Book a 30-min call</a>
+    <a href="mailto:salehin.riad96@gmail.com">salehin.riad96@gmail.com</a>
+    <a href="./content-engine.html">See the full system map</a>
+  </span>
+</div></div>
+
+<script>
+const PHASES = [
+  {
+    n:"1", title:"Brand Foundation",
+    produces:"{name}-brand-foundation.md",
+    groups:[{ nodes:[
+      {nm:"Brand website URL", cat:"ext", r:"full", why:"The one required input. Everything the brand says about itself: home, pricing, features, case studies, blog."},
+      {nm:"Live external research", cat:"ext", r:"part", why:"G2 and Capterra, Reddit, HN, press. Builds the customer voice bank and outside perception."},
+      {nm:"Top competitor homepages", cat:"ext", r:"part", why:"A quick homepage-only scan of the 3 to 5 direct rivals for positioning and pricing."},
+      {nm:"product-details.md", cat:"engine", r:"part", why:"Optional. Read only if it already exists, and only to supersede the feature and pricing section."},
+      {nm:"Web fetch / scrape", cat:"tool", r:"out", why:"Reads every page above via the fetch ladder (WebFetch, Firecrawl, Chrome)."},
+      {nm:"Ahrefs MCP", cat:"tool", r:"out", why:"Identifies and sizes organic competitors, and pulls the central-entity search volume."},
+      {nm:"DataForSEO SERP", cat:"tool", r:"out", why:"Captures whether the brand appears in the AI Overview for its head terms."},
+    ]}],
+    note:"This is the root. Its only engine-file input is the optional product-details supplement, so in a clean first build it runs before everything else."
+  },
+  {
+    n:"2", title:"Product Detail",
+    produces:"{name}-product-details.md",
+    groups:[{ nodes:[
+      {nm:"{name}-brand-foundation.md", cat:"engine", r:"part", why:"Prerequisite plus context: reads the product category, positioning, audience, and high-level feature list to expand on."},
+      {nm:"Product site, docs, pricing", cat:"ext", r:"full", why:"Primary source. Documents every feature, sub-feature, plan tier, and integration from the product's own pages and changelog."},
+      {nm:"Web fetch / scrape", cat:"tool", r:"out", why:"Reads the product properties. This phase is not SERP-driven and uses no keyword tools."},
+    ]}],
+    note:"Companion to brand foundation. It deepens the feature section into its own authoritative file that later phases treat as the source of truth for product claims."
+  },
+  {
+    n:"3", title:"Competitor Foundation",
+    produces:"two files per competitor: competitor-brand-foundation + competitor-product-details",
+    groups:[{ nodes:[
+      {nm:"Competitor website URL", cat:"ext", r:"full", why:"Required input. A full-site crawl of the competitor's own pages is the primary source for its product-details file."},
+      {nm:"{name}-brand-foundation.md", cat:"engine", r:"part", why:"Prerequisite. Reads our strengths (for the vulnerability map), our ICP (for overlap), and our voice (for contrast)."},
+      {nm:"Live research on competitor", cat:"ext", r:"part", why:"Complaint-weighted: G2, Capterra, Reddit, press. Feeds the weakness profile and switching triggers."},
+      {nm:"Web fetch / scrape", cat:"tool", r:"out", why:"Heavy use here: the competitor crawl is often 20-plus fetches through the ladder."},
+      {nm:"Ahrefs MCP", cat:"tool", r:"out", why:"Sizes the competitor's own landscape (its organic competitors and domain rating)."},
+      {nm:"DataForSEO SERP", cat:"tool", r:"out", why:"Checks whether the competitor is named in the AI Overview for head terms."},
+    ]}],
+    note:"Same toolset as brand foundation. The difference is emphasis: a far heavier primary-source crawl, and weakness-weighted research queries."
+  },
+  {
+    n:"4", title:"Topical Map",
+    produces:"{name}-topical-map.csv (built by build_map.py) then convert to specs.jsonl",
+    groups:[{ nodes:[
+      {nm:"{name}-brand-foundation.md", cat:"engine", r:"full", why:"Primary source. Category and spine, ICP, pains and jobs (entity seeds), competitors, positioning, voice."},
+      {nm:"{name}-product-details.md", cat:"engine", r:"full", why:"When present. Features, sub-features, integrations, and pricing become entity seeds for product-led pages."},
+      {nm:"Competitor foundation", cat:"gate", r:"gate", why:"Prerequisite only. The runbook does not read the files; it derives rivals from brand-foundation Section 9 plus Ahrefs."},
+      {nm:"review-methodology.md", cat:"gate", r:"gate", why:"Gate for evaluative rows. Its existence lets the builder emit the one How-We-Review row and any review or best pages."},
+      {nm:"Ahrefs MCP", cat:"tool", r:"out", why:"Default keyword data: volume, difficulty, and domain intelligence for every candidate query."},
+      {nm:"DataForSEO SERP", cat:"tool", r:"out", why:"Validates each query's real SERP, AI Overview, and People Also Ask before a row is kept."},
+      {nm:"Web search", cat:"tool", r:"out", why:"Organic-URL and sitemap discovery only, never for SERP features."},
+    ]}],
+    note:"Never hand-typed. A re-runnable Python builder computes the map and preserves the lifecycle columns on every re-run."
+  },
+  {
+    n:"5", title:"Content Brief",
+    produces:"{id}-brief.md (one per page)",
+    groups:[
+      { note:"Common to every brief, whatever the page type.", nodes:[
+        {nm:"Topical-map row", cat:"engine", r:"part", why:"The floor for this one page: its entities, attributes, internal links, and target keywords."},
+        {nm:"{name}-brand-foundation.md", cat:"engine", r:"full", why:"ICP, pains and jobs, competitors, positioning, differentiators, and the voice bank."},
+        {nm:"{name}-product-details.md", cat:"engine", r:"part", why:"Required for feature, sub-feature, and use-case briefs; the feature and pricing depth."},
+        {nm:"entity-inventory.csv", cat:"engine", r:"part", why:"Read-only. Pulls the entities matching this page as a coverage floor."},
+        {nm:"linking-anchor-inventory.csv", cat:"engine", r:"part", why:"Read-only when present. Anchor-variant context so anchors stay diverse."},
+        {nm:"reference-brief PT{n}", cat:"engine", r:"full", why:"The per-page-type spec. This is the node that changes with the page type: heading skeleton and mandatory sections."},
+        {nm:"DataForSEO SERP", cat:"tool", r:"out", why:"The primary and secondary query SERPs, AI Overview verbatim, and People Also Ask."},
+        {nm:"Ahrefs MCP", cat:"tool", r:"out", why:"Keyword volume and difficulty for the primary and related terms."},
+        {nm:"Fetch ladder", cat:"tool", r:"out", why:"Deep reads of the competing pages, Reddit threads, and review sites."},
+        {nm:"Reddit + G2 / Capterra", cat:"ext", r:"part", why:"Mandatory for product briefs. Real user language, complaints, and questions."},
+      ]},
+      { tag:"eval", tagText:"Evaluative only adds",
+        note:"Review, comparison, alternative, best-list, and buyer-guide briefs. These two nodes are a hard gate; without them the brief stops.",
+        nodes:[
+        {nm:"Competitor foundation + product-details", cat:"engine", r:"full", why:"The compared or reviewed product's positioning, ICP, differentiators, and complaint patterns."},
+        {nm:"review-methodology.md", cat:"engine", r:"part", why:"The weighted rubric that produces each product's score and the reviewScore this brief carries forward."},
+      ]},
+    ],
+    note:"Informational briefs (what-is, how-to) read neither competitor foundations nor the methodology; PT27 forbids naming competitors at all."
+  },
+  {
+    n:"6", title:"Content Write + Review",
+    produces:"{id}-content.md (research once, write, then review, in one pass)",
+    groups:[
+      { grpTitle:"Stage A. Research (once, into a shared dossier)", nodes:[
+        {nm:"Brief", cat:"engine", r:"part", why:"Seeds the research plan: skeleton, sub-queries, entities. Word counts are never read."},
+        {nm:"DataForSEO SERP + aio", cat:"tool", r:"out", why:"The live SERP per section plus the AI Overview verbatim and its cited domains."},
+        {nm:"Fetch ladder + Ahrefs", cat:"tool", r:"out", why:"Full-body fetches of every competing page, deduped, plus keyword adjacency."},
+        {nm:"Live SERP, competing pages", cat:"ext", r:"full", why:"The ground-truth intent map and the pages this article must beat on information gain."},
+        {nm:"dossier/", cat:"engine", r:"out", why:"Written here. Raw captures and a neutral fact index that both the writer and reviewer then read instead of re-fetching."},
+      ]},
+      { grpTitle:"Stage B. Write (drafts the article from the dossier)", nodes:[
+        {nm:"Dossier raw captures", cat:"engine", r:"full", why:"Replaces re-fetching the SERP. The writer applies its own judgment to already-gathered facts."},
+        {nm:"reference-writer PT{n}", cat:"engine", r:"full", why:"The per-page-type structure and forbidden patterns. Loaded with the master writing runbook, never instead of it."},
+        {nm:"Topical map", cat:"engine", r:"part", why:"Resolves every internal link to the destination row's full proposed_url."},
+        {nm:"Brand foundation", cat:"engine", r:"part", why:"Positioning and differentiators for framing, plus the voice bank and voice signals for calibration."},
+        {nm:"Entity + anchor inventories", cat:"engine", r:"part", why:"Read-only coverage and anchor-diversity context during drafting."},
+      ]},
+      { grpTitle:"Stage C. Review (Opus, edits in place, validator last)", nodes:[
+        {nm:"The article", cat:"engine", r:"full", why:"The deliverable, edited in place to 10x information gain, never a new file."},
+        {nm:"Brand foundation", cat:"engine", r:"full", why:"Read in full here, a broader slice than the writer used, to check every brand claim."},
+        {nm:"Brief", cat:"engine", r:"part", why:"Intent and required entities only, never as a research substitute."},
+        {nm:"Dossier raw captures", cat:"engine", r:"full", why:"Reuses the session-fresh SERP and competitor bodies, but re-derives every judgment independently."},
+        {nm:"Deterministic validator", cat:"tool", r:"out", why:"Run once as the final step: dashes, sentence and paragraph caps, lead sentences, link mechanics."},
+      ]},
+      { tag:"eval", tagText:"Evaluative adds (across all three stages)",
+        note:"Comparison, product review, alternative, and best-list pages. Informational pages read none of these.",
+        nodes:[
+        {nm:"Competitor foundation + product-details", cat:"engine", r:"full", why:"The reviewed or compared product's full intelligence file."},
+        {nm:"PT14 review of each product", cat:"engine", r:"full", why:"The cross-page source of truth. Best-lists, comparisons, and alternatives pull each product's score and facts from its review so pages never contradict."},
+        {nm:"review-methodology.md", cat:"engine", r:"full", why:"Hard gate in review. Produces the scorecard and reviewScore; a 2-vote refute pass runs for reviews and best-lists."},
+        {nm:"Review platforms (verify)", cat:"ext", r:"full", why:"G2, Capterra, Reddit, Trustpilot. Every cited rating must match the live aggregator."},
+      ]},
+      { tag:"info", tagText:"Informational adds",
+        note:"What-is and how-to pages.",
+        nodes:[
+        {nm:"Authoritative definition source", cat:"ext", r:"full", why:"The primary source (Scrum Guide, NIST, a regulation) the definition must align with, not contradict."},
+        {nm:"Brand foundation (narrow)", cat:"engine", r:"part", why:"Only the voice bank and voice signals, for the single brand tie-in; the body stays neutral."},
+      ]},
+    ],
+    note:"The writer and reviewer both ignore the brief's word counts entirely. Length is decided by content need, not a number."
+  },
+  {
+    n:"7", title:"Article Images",
+    produces:"plan.json + placement doc, then one finalized {filename}.jpg per image",
+    groups:[
+      { grpTitle:"Role 1. Plan (Claude analyzes one article)", nodes:[
+        {nm:"{id}-content.md (the article)", cat:"engine", r:"full", why:"Walked section by section to decide which headings earn an image and of what type."},
+        {nm:"{name}-brand-guideline.md", cat:"engine", r:"full", why:"The visual language used to draft each image's prompt."},
+        {nm:"{name}-product-details.md", cat:"engine", r:"part", why:"Read only when an image depicts the product, for accurate product facts."},
+        {nm:"Topical map (eligibility)", cat:"engine", r:"part", why:"Filters to eligible rows only: blog pages that already have an article and are not an excluded page type."},
+      ]},
+      { grpTitle:"Role 2. Render + finalize (Codex, then Node)", nodes:[
+        {nm:"plan.json (per-image prompt)", cat:"engine", r:"full", why:"The what of every image. The render only runs for slots whose output file is still missing."},
+        {nm:"brandStyle + logo-safe note", cat:"engine", r:"full", why:"Config text appended to every prompt so all images share the brand look and keep a clean corner for the logo."},
+        {nm:"Brand logo (dark + white)", cat:"engine", r:"full", why:"Overlaid on the finished image; the variant is chosen by the corner's luminance."},
+        {nm:"Codex CLI", cat:"tool", r:"out", why:"The actual image generator. Renders each prompt to a raw image file."},
+        {nm:"Node / Jimp", cat:"tool", r:"out", why:"Overlays the logo, compresses, and places the image under its descriptive filename."},
+      ]},
+    ],
+    note:"Excluded from AI images: product reviews, alternatives, and best-lists (PT14, 15, 17) use real screenshots. Comparison pages (PT13, 16) get conceptual and data visuals only, never a drawn product UI."
+  },
+];
+
+const flow = document.getElementById('flow');
+const catName = {engine:"Engine file", tool:"Tool", ext:"External", gate:"Gate"};
+
+PHASES.forEach((p, i) => {
+  if (i > 0) {
+    const a = document.createElement('div');
+    a.className = 'arrow'; a.textContent = '▼';
+    a.setAttribute('aria-hidden','true');
+    flow.appendChild(a);
+  }
+  const sec = document.createElement('section');
+  sec.className = 'phase';
+
+  const head = document.createElement('div');
+  head.className = 'phead';
+  head.innerHTML =
+    '<span class="pnum">'+p.n+'</span>'+
+    '<div class="pttl"><h3>'+p.title+'</h3>'+
+    '<p class="produces">Produces &rarr; <code>'+p.produces+'</code></p></div>';
+  sec.appendChild(head);
+
+  const body = document.createElement('div');
+  body.className = 'pbody';
+  const inl = document.createElement('div');
+  inl.className = 'inlbl';
+  inl.textContent = 'Reads / needs';
+  body.appendChild(inl);
+
+  p.groups.forEach(g => {
+    const grp = document.createElement('div');
+    grp.className = 'grp';
+    if (g.grpTitle) {
+      const h = document.createElement('p'); h.className = 'grp-h';
+      h.textContent = g.grpTitle; grp.appendChild(h);
+    }
+    if (g.tag) {
+      const h = document.createElement('p'); h.className = 'grp-h';
+      const cls = g.tag === 'eval' ? 'tag-eval' : 'tag-info';
+      h.innerHTML = '<span class="tag '+cls+'">'+g.tagText+'</span>';
+      grp.appendChild(h);
+    }
+    if (g.note) {
+      const nt = document.createElement('p'); nt.className = 'grp-note';
+      nt.textContent = g.note; grp.appendChild(nt);
+    }
+    const nodes = document.createElement('div');
+    nodes.className = 'nodes';
+    g.nodes.forEach(nd => {
+      const el = document.createElement('div');
+      el.className = 'node ' + nd.cat;
+      const rcls = {full:'r-full',part:'r-part',gate:'r-gate',out:'r-out'}[nd.r];
+      el.innerHTML =
+        '<span class="cat '+nd.cat+'">'+catName[nd.cat]+'</span>'+
+        '<div class="nm"><span>'+nd.nm+'</span><span class="rbadge '+rcls+'">'+nd.r+'</span></div>'+
+        '<div class="why">'+nd.why+'</div>';
+      nodes.appendChild(el);
+    });
+    grp.appendChild(nodes);
+    body.appendChild(grp);
+  });
+
+  if (p.note) {
+    const nt = document.createElement('div');
+    nt.className = 'pnote';
+    nt.innerHTML = '<b>Note.</b> ' + p.note;
+    body.appendChild(nt);
+  }
+  sec.appendChild(body);
+  flow.appendChild(sec);
+});
+</script>
+</body>
+</html>

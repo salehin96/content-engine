@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content Engine — System Architecture Map</title>
+<meta name="description" content="An AI-orchestrated, multi-brand SEO content engine: how an AI agent doing every judgment step against machine-enforced rulebooks, plus deterministic code for everything exact, ships publication-grade articles at scale.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://salehin96.github.io/content-engine/">
+<meta property="og:title" content="I designed an AI content engine that runs entire multi-brand content operations">
+<meta property="og:description" content="Interactive system map: AI judgment against machine-enforced rulebooks + deterministic code for everything exact. Hover any node to trace what it reads and writes.">
+<meta property="og:image" content="https://salehin96.github.io/content-engine/og-cover.png">
+<meta property="og:image:width" content="1672">
+<meta property="og:image:height" content="941">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<style>
+  :root{
+    --ground:#F6F8FB; --panel:#FFFFFF; --ink:#141D30; --ink-2:#4A5670; --ink-3:#7A86A0;
+    --line:#DCE3EF;
+    --accent:#0958D9;
+    --c-skill:#6B45B8; --c-skill-bg:#F3EEFB; --c-skill-ln:#D8CBEF;
+    --c-rule:#96610A;  --c-rule-bg:#FBF3E4;  --c-rule-ln:#EBD9B4;
+    --c-file:#0B7A63;  --c-file-bg:#E9F6F2;  --c-file-ln:#BFE3D8;
+    --c-code:#33608F;  --c-code-bg:#EDF3FA;  --c-code-ln:#C9DAEC;
+    --c-ext:#AE3760;   --c-ext-bg:#FAEDF1;   --c-ext-ln:#EFC9D6;
+    --mono:Consolas,"Cascadia Mono",ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);font-family:"Segoe UI",-apple-system,system-ui,sans-serif;line-height:1.55;margin:0}
+  .wrap{max-width:1240px;margin:0 auto;padding:40px 28px 80px}
+  header.hero{padding:8px 0 26px;border-bottom:1px solid var(--line);margin-bottom:26px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  h1{font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-.02em;margin:.25em 0 .3em;text-wrap:balance}
+  .hero p{max-width:72ch;color:var(--ink-2);margin:.3em 0;font-size:16px}
+  .stats{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:18px}
+  .stat{font-variant-numeric:tabular-nums}
+  .stat b{font-size:20px;font-weight:700;color:var(--ink)}
+  .stat span{display:block;font-size:12px;color:var(--ink-3);letter-spacing:.05em;text-transform:uppercase}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 8px}
+  .lg{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+  .dot{width:11px;height:11px;border-radius:3px;flex:none}
+  .hint{font-size:13.5px;color:var(--ink-3);margin:10px 0 26px}
+  .hint b{color:var(--ink-2)}
+
+  #diagram{position:relative}
+  #edges{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+  #edges path{fill:none;stroke-width:1.6;opacity:.26;transition:opacity .18s,stroke-width .18s}
+  #edges.focusing path{opacity:.05}
+  #edges.focusing path.on{opacity:.95;stroke-width:2.6}
+  @media (prefers-reduced-motion:reduce){#edges path,.node{transition:none!important}}
+
+  .band{position:relative;z-index:1;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px 22px;margin-bottom:56px;box-shadow:0 1px 2px rgba(20,29,48,.04)}
+  .band-hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin-bottom:6px}
+  .ph{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.1em;color:#fff;background:var(--accent);border-radius:6px;padding:3px 9px}
+  .band-hd h2{font-size:19px;font-weight:700;letter-spacing:-.01em;margin:0}
+  .band-sub{font-size:13.5px;color:var(--ink-2);max-width:100ch;margin:0 0 16px}
+  .nodes{display:flex;flex-wrap:wrap;gap:14px;align-items:stretch}
+
+  .node{position:relative;z-index:2;width:270px;max-width:100%;border-radius:10px;border:1px solid var(--line);background:#fff;padding:10px 12px 11px;cursor:default;transition:box-shadow .18s,border-color .18s}
+  .node.lit{box-shadow:0 0 0 2px currentColor}
+  .node .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.12em;border-radius:4px;padding:2px 7px;margin-bottom:6px}
+  .node code{display:block;font-family:var(--mono);font-size:12px;font-weight:600;line-height:1.45;color:var(--ink);word-break:break-word}
+  .node p{margin:5px 0 0;font-size:12.5px;line-height:1.5;color:var(--ink-2)}
+  .node .badge{display:inline-block;margin-top:7px;font-size:10.5px;font-weight:600;color:var(--ink-3);border:1px dashed var(--line);border-radius:999px;padding:2px 8px}
+
+  .t-skill{background:var(--c-skill-bg);border-color:var(--c-skill-ln);color:var(--c-skill)}
+  .t-skill .tag{background:var(--c-skill);color:#fff}
+  .t-rule{background:var(--c-rule-bg);border-color:var(--c-rule-ln);color:var(--c-rule)}
+  .t-rule .tag{background:var(--c-rule);color:#fff}
+  .t-file{background:var(--c-file-bg);border-color:var(--c-file-ln);color:var(--c-file)}
+  .t-file .tag{background:var(--c-file);color:#fff}
+  .t-code{background:var(--c-code-bg);border-color:var(--c-code-ln);color:var(--c-code)}
+  .t-code .tag{background:var(--c-code);color:#fff}
+  .t-ext{background:var(--c-ext-bg);border-color:var(--c-ext-ln);color:var(--c-ext)}
+  .t-ext .tag{background:var(--c-ext);color:#fff}
+
+  .appendix{margin-top:20px}
+  .appendix h2{font-size:24px;letter-spacing:-.015em;margin:44px 0 6px}
+  .appendix h3{font-size:17px;margin:30px 0 6px}
+  .appendix p,.appendix li{max-width:78ch;color:var(--ink-2);font-size:15px}
+  .appendix li{margin:5px 0}
+  .appendix code{font-family:var(--mono);font-size:.9em;background:#EDF1F8;border-radius:4px;padding:1px 5px;color:var(--ink)}
+  .rulecard{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;margin:14px 0}
+  .rulecard b{color:var(--ink)}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:14px 0}
+  .tblwrap{overflow-x:auto}
+  th{text-align:left;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);border-bottom:2px solid var(--line);padding:8px 10px}
+  td{border-bottom:1px solid var(--line);padding:9px 10px;vertical-align:top;color:var(--ink-2)}
+  td code{white-space:nowrap}
+  .lifecycle{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+  .lc{font-family:var(--mono);font-size:13px;font-weight:600;background:#fff;border:1.5px solid var(--c-file-ln);color:var(--c-file);border-radius:999px;padding:5px 14px}
+  .lc.pub{border-color:var(--accent);color:var(--accent)}
+  .arrow{color:var(--ink-3);font-size:15px}
+  footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-3)}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">AI Content Engine · system architecture</div>
+  <h1>How the content factory actually works, layer by layer</h1>
+  <p>A <b>multi-brand SEO content engine</b>. An AI agent does every editorial judgment step — research, planning, writing, reviewing — following written rulebooks. A Node.js engine does everything that must be exact — converting, validating, generating images, publishing to the CMS. Every step reads specific files and writes specific files, so the whole system is an auditable chain of documents. <b>The design principle: separate judgment from determinism, and make rule-compliance a gate that physically blocks bad output.</b></p>
+  <div class="stats">
+    <div class="stat"><b>5</b><span>brands</span></div>
+    <div class="stat"><b>6</b><span>pipeline phases</span></div>
+    <div class="stat"><b>7</b><span>master runbooks</span></div>
+    <div class="stat"><b>34</b><span>page-type playbooks</span></div>
+    <div class="stat"><b>9</b><span>skills (triggers)</span></div>
+    <div class="stat"><b>13</b><span>engine commands</span></div>
+    <div class="stat"><b>3</b><span>AI agents / article</span></div>
+  </div>
+</header>
+
+<div class="legend">
+  <span class="lg"><span class="dot" style="background:var(--c-skill)"></span>Claude — skills &amp; agents (the workers)</span>
+  <span class="lg"><span class="dot" style="background:var(--c-rule)"></span>Rulebooks — runbooks, schemas, references (the law)</span>
+  <span class="lg"><span class="dot" style="background:var(--c-file)"></span>Data files — the artifacts produced &amp; consumed</span>
+  <span class="lg"><span class="dot" style="background:var(--c-code)"></span>Engine code — deterministic Node.js / scripts</span>
+  <span class="lg"><span class="dot" style="background:var(--c-ext)"></span>External world — web research, image AI, headless CMS</span>
+</div>
+<p class="hint"><b>Hover (or tap) any box</b> to light up everything it reads and writes. Solid lines = data flowing between files and workers. Dashed lines = rules, triggers, and enforcement. Arrows point in the direction the information travels.</p>
+
+<div id="diagram">
+<svg id="edges" aria-hidden="true"></svg>
+
+<!-- ═══════════ GOVERNANCE ═══════════ -->
+<section class="band" id="band-gov">
+  <div class="band-hd"><span class="ph">LAYER 0</span><h2>Governance — the law every phase obeys</h2></div>
+  <p class="band-sub">These files are loaded before any work starts. They never produce content themselves; they constrain everyone who does. One of them is not even a document — it is a hook that physically blocks output written without proof the rules were read.</p>
+  <div class="nodes">
+    <div class="node t-rule" id="n-claudemd"><span class="tag">CONTROL TOWER</span><code>CLAUDE.md&ensp;·&ensp;AGENTS.md</code><p>The constitution: the exact 6-phase pipeline, the non-negotiable rules, and where every detailed procedure lives. AGENTS.md is its identical twin read by Codex.</p><span class="badge">loaded every session</span></div>
+    <div class="node t-rule" id="n-opsprin"><span class="tag">DISCIPLINE</span><code>shared/operating-principles.md</code><p>Section S2: no fabrication, confidence labels on every claim, linking rules, punctuation bans, the Adherence Protocol (§S2.19), ignore-word-counts (§S2.20).</p></div>
+    <div class="node t-rule" id="n-subpat"><span class="tag">ORCHESTRATION</span><code>shared/subagent-patterns.md</code><p>How Claude splits work across parallel agents: max 5 concurrent, each owns ONE file, Pattern H = the merged write+review pass with one shared research dossier.</p></div>
+    <div class="node t-rule" id="n-toolmap"><span class="tag">TOOL ROUTING</span><code>shared/tool-capability-map.md · tool-fallback-reference.md</code><p>Which research tool to use for what (SERP, scraping, keyword data) and what to fall back to when one fails or runs out of credits.</p></div>
+    <div class="node t-rule" id="n-koray"><span class="tag">METHODOLOGY</span><code>shared/koray-glossary.md</code><p>The semantic-SEO vocabulary (Koray Tugberk Gubur's framework) the whole system is built on: topical maps, entities, contextual coverage.</p></div>
+    <div class="node t-code" id="n-hook"><span class="tag">ENFORCER</span><code>.claude/hooks/adherence-gate.mjs</code><p>A machine gate: it BLOCKS any attempt to save an article or brief until that item's adherence file exists. Skipping the rules is physically impossible, not just discouraged.</p><span class="badge">machine-enforced</span></div>
+  </div>
+</section>
+
+<!-- ═══════════ PHASE 1-2 ═══════════ -->
+<section class="band" id="band-found">
+  <div class="band-hd"><span class="ph">PHASE 1–2</span><h2>Foundations — learn the brand, then learn every rival</h2></div>
+  <p class="band-sub">Before a single article is planned, Claude researches the product's own website and the live web to write the brand's "identity card", then does the same for each competitor. Every later phase reads these files in full — they are the single source of who the brand is and what its rivals actually offer.</p>
+  <div class="nodes">
+    <div class="node t-skill" id="n-sk-brand"><span class="tag">SKILL</span><code>/brand-foundation · /product-detail</code><p>The triggers. Claude studies the product's live site plus outside research and writes the two canonical brand files.</p></div>
+    <div class="node t-rule" id="n-rb-brand"><span class="tag">RUNBOOK</span><code>runbooks/brand-foundation-runbook.md</code><p>The step-by-step procedure: voice, audience, ideal customer, pains, jobs-to-be-done, competitors, positioning.</p></div>
+    <div class="node t-skill" id="n-sk-comp"><span class="tag">SKILL</span><code>/competitor-foundation</code><p>Repeats the same deep research for each competitor. Required before ANY comparison, alternative, review, or "best of" page may exist.</p></div>
+    <div class="node t-rule" id="n-rb-comp"><span class="tag">RUNBOOK</span><code>runbooks/competitor-foundation-runbook.md</code><p>The procedure for profiling a rival: their product, pricing, gaps, and reputation on review platforms.</p></div>
+    <div class="node t-ext" id="n-ext-web"><span class="tag">LIVE WEB</span><code>SERP · Firecrawl · DataForSEO · G2 / Capterra / Reddit</code><p>The outside world. Every fact in the system is retrieved fresh from here in-session — nothing is written from memory.</p></div>
+    <div class="node t-file" id="n-brandfound"><span class="tag">DATA</span><code>00-brand/{brand}-brand-foundation.md</code><p>THE canonical brand context. Never condensed, never copied — read in full by every downstream phase.</p><span class="badge">read by phases 3–6</span></div>
+    <div class="node t-file" id="n-proddetails"><span class="tag">DATA</span><code>00-brand/{brand}-product-details.md</code><p>Feature-by-feature product depth. The authoritative source for any claim about the product itself.</p></div>
+    <div class="node t-file" id="n-revmeth"><span class="tag">DATA</span><code>00-brand/{brand}-review-methodology.md</code><p>A weighted scoring rubric. Every review, comparison, and "best of" page computes its verdict score from this — no score without it. Also published once as the public "How We Review" page.</p><span class="badge">gate for evaluative pages</span></div>
+    <div class="node t-file" id="n-compfound"><span class="tag">DATA</span><code>00-brand/competitors/{c}/…-brand-foundation.md&ensp;+&ensp;…-product-details.md</code><p>One pair of files per competitor. Comparison, alternative, and "best of" pages quote these, never guesses.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ PHASE 3 ═══════════ -->
+<section class="band" id="band-map">
+  <div class="band-hd"><span class="ph">PHASE 3</span><h2>Topical map — the master plan of every page the site will ever have</h2></div>
+  <p class="band-sub">One spreadsheet row per future page: its exact URL, target search query, page type (out of 39 types), which pages it must link to, and its lifecycle status. It is generated by a Python script — never typed by hand — so the plan is reproducible and self-validating.</p>
+  <div class="nodes">
+    <div class="node t-skill" id="n-sk-map"><span class="tag">SKILL</span><code>/topical-map</code><p>Claude reads the brand + ALL competitor foundations, validates every planned query against the real search results, and edits the builder script.</p></div>
+    <div class="node t-rule" id="n-rb-map"><span class="tag">RUNBOOK</span><code>runbooks/topical-map-generation-runbook.md</code><p>How to design the map: topic clusters, query validation, internal-link architecture.</p></div>
+    <div class="node t-rule" id="n-schema"><span class="tag">SCHEMA</span><code>schemas/topical-map-schema.md · page-type-inventory.md</code><p>The column contract for the CSV, plus the catalog of 39 page types (PT1–PT39) — review, comparison, how-to, what-is, FAQ hub…</p></div>
+    <div class="node t-code" id="n-builder"><span class="tag">BUILDER</span><code>01-topical-map/_scratch/{brand}-build_map.py</code><p>Re-runnable Python script — the map's durable source. To change the map you edit this and re-run it; it validates and writes the CSV atomically, preserving lifecycle columns.</p><span class="badge">never hand-type the CSV</span></div>
+    <div class="node t-file" id="n-map"><span class="tag">CSV</span><code>01-topical-map/{brand}-topical-map.csv</code><p>The heart of the system. Every page's <code>proposed_url</code>, query, page type, planned internal links — plus the lifecycle columns every phase updates.</p><span class="badge">hub file — everything reads it</span></div>
+    <div class="node t-file" id="n-entinv"><span class="tag">CSV</span><code>01-topical-map/{brand}-entity-inventory.csv</code><p>Every named thing (laws, tools, concepts) the site must cover, and where. Keeps hundreds of articles consistent about facts and terminology.</p><span class="badge">rebuilt by review</span></div>
+    <div class="node t-file" id="n-mapdocs"><span class="tag">DOCS</span><code>…-topical-map-overview.md · …-source-log.md</code><p>The human-readable summary of the map's strategy, and the audit trail of every source consulted while building it.</p></div>
+    <div class="node t-skill" id="n-sk-convert"><span class="tag">SKILL</span><code>/csv-to-jsonl</code><p>Trigger for the engine's convert step.</p></div>
+    <div class="node t-code" id="n-convert"><span class="tag">ENGINE</span><code>engine convert&ensp;(csv-convert.mjs)</code><p>Deterministically converts the CSV into the machine-readable spec file the engine's commands consume.</p></div>
+    <div class="node t-file" id="n-specs"><span class="tag">JSONL</span><code>content-plan/{brand}-specs.jsonl</code><p>Auto-generated, never hand-edited. One JSON object per page; read by validate, publish, and thumbnails.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ PHASE 4 ═══════════ -->
+<section class="band" id="band-brief">
+  <div class="band-hd"><span class="ph">PHASE 4</span><h2>Content briefs — one research-backed blueprint per page</h2></div>
+  <p class="band-sub">For each map row, Claude runs fresh search-results research and writes a brief: the page's angle, required sections, required entities, and its internal-link plan. In a batch, every brief gets its own independent agent doing its own research — briefs never copy each other.</p>
+  <div class="nodes">
+    <div class="node t-skill" id="n-sk-brief"><span class="tag">SKILL</span><code>/content-brief</code><p>The trigger. Reads the map row, brand + competitor context, and the live SERP; writes the brief; then marks the map row <code>briefed</code>.</p></div>
+    <div class="node t-rule" id="n-rb-brief"><span class="tag">RUNBOOK</span><code>runbooks/content-brief-generation-runbook.md</code><p>The universal brief procedure: research phases, validation gates, output format.</p></div>
+    <div class="node t-rule" id="n-refbriefs"><span class="tag">17 REFERENCES</span><code>reference-briefs/PT13…PT33-*.md</code><p>Per-page-type playbooks layered ON TOP of the master runbook (both always load): a review brief is structured differently from a how-to brief.</p></div>
+    <div class="node t-file" id="n-brief"><span class="tag">DATA</span><code>02-briefs/briefs/{id}-brief.md</code><p>One blueprint per page: intent, angle, heading skeleton, required entities, link plan, competitor gaps to beat.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ PHASE 5+6 ═══════════ -->
+<section class="band" id="band-prod">
+  <div class="band-hd"><span class="ph">PHASE 5+6</span><h2>Production — research once, write, then adversarially review (Pattern H)</h2></div>
+  <p class="band-sub">Writing and reviewing run as ONE pass per article with three separate specialist agents. A research agent builds a shared evidence dossier. A writer drafts from that dossier only. A reviewer — a stronger model with a deliberately cold, adversarial handoff — re-judges everything and edits the draft in place. No article ships without surviving this.</p>
+  <div class="nodes">
+    <div class="node t-skill" id="n-sk-write"><span class="tag">SKILL</span><code>/content-write&ensp;·&ensp;/content-review</code><p>The triggers. <code>/content-write</code> runs the full merged pass; <code>/content-review</code> alone re-reviews an older article from scratch.</p></div>
+    <div class="node t-skill" id="n-orch"><span class="tag">ORCHESTRATOR</span><code>Claude (Opus)&ensp;— batch conductor</code><p>Dispatches at most 5 agents at once, then runs the checks no single-file agent can see: anchor-text variety, link resolution, sibling overlap. Updates the map's lifecycle columns.</p></div>
+    <div class="node t-rule" id="n-rb-write"><span class="tag">RUNBOOK</span><code>runbooks/content-writing-runbook.md</code><p>The writing law: answer-first sections, sentence/paragraph caps, lists over prose, first-person evidence, Grammarly grammar.</p></div>
+    <div class="node t-rule" id="n-rb-review"><span class="tag">RUNBOOK</span><code>runbooks/content-review-runbook.md</code><p>Self-contained review law: embeds the SEO, AEO, GEO, and grammar rules verbatim. Bar = 10× information gain, "not longer, better".</p></div>
+    <div class="node t-rule" id="n-refwriters"><span class="tag">17 REFERENCES</span><code>reference-writers/PT13…PT33-*.md</code><p>Per-page-type writing playbooks. The writer follows them; the reviewer audits against the SAME file.</p></div>
+    <div class="node t-skill" id="n-research"><span class="tag">AGENT · SONNET</span><code>Research subagent</code><p>Fetches the live SERP, AI Overview, full competitor pages, and review-platform evidence ONCE per article into a shared dossier — so writer and reviewer never duplicate the research.</p></div>
+    <div class="node t-file" id="n-dossier"><span class="tag">DATA</span><code>03-content/_scratch/{id}/dossier/</code><p>The raw evidence locker: session-fresh captures, not interpretations. The reviewer reuses the captures but re-derives every conclusion itself.</p></div>
+    <div class="node t-file" id="n-adherence"><span class="tag">GATE FILE</span><code>03-content/_scratch/{id}/adherence.md</code><p>Proof-of-work: a load manifest (which rulebooks were read) + a conformance attestation (every checklist item ticked). The hook demands it before any output can be saved.</p></div>
+    <div class="node t-skill" id="n-writeagent"><span class="tag">AGENT · SONNET</span><code>Write subagent</code><p>Drafts the article from the dossier, the brief, and the brand files. Ignores the brief's word counts entirely — length follows content need.</p></div>
+    <div class="node t-skill" id="n-reviewagent"><span class="tag">AGENT · OPUS</span><code>Review subagent</code><p>Adversarial editor: re-reads the raw evidence cold, re-judges every fact, beats every competitor page, applies the scoring rubric, and edits the article file in place. Runs the validator last.</p></div>
+    <div class="node t-file" id="n-article"><span class="tag">DATA</span><code>03-content/articles/{id}-content.md</code><p>The article itself — one file per page, edited in place forever (never forked). Frontmatter carries its URL, entities, and review score.</p><span class="badge">the product</span></div>
+    <div class="node t-code" id="n-validate"><span class="tag">ENGINE</span><code>engine validate&ensp;(validate.mjs)</code><p>Deterministic final check: no em/en-dashes, sentence &amp; paragraph caps, lead-in before lists, resolvable internal links, entity minimums. Runs only as review's last step.</p></div>
+    <div class="node t-file" id="n-linkinv"><span class="tag">CSV</span><code>02-briefs/{brand}-linking-anchor-inventory.csv</code><p>Every internal link's anchor text across the whole site — so hundreds of articles don't all link with the same words. Written ONLY by review; read by briefs for context.</p><span class="badge">review-owned</span></div>
+  </div>
+</section>
+
+<!-- ═══════════ ASSETS ═══════════ -->
+<section class="band" id="band-img">
+  <div class="band-hd"><span class="ph">ASSETS</span><h2>Images — Claude plans, Codex paints, the engine finishes</h2></div>
+  <p class="band-sub">Two visual pipelines share one division of labor: Claude decides WHAT each image should be (never forcing one where a table already works), OpenAI's Codex generates the pixels, and Node.js code applies the brand finish. The three run as separate sequential processes driven by one PowerShell script.</p>
+  <div class="nodes">
+    <div class="node t-skill" id="n-sk-imgplan"><span class="tag">SKILL</span><code>/article-image-plan</code><p>Claude reads a finished article and plans its in-body images: which sections earn one, the type, SEO filename, alt text, and the generation prompt. Skips sections a table or list already serves.</p></div>
+    <div class="node t-rule" id="n-rb-img"><span class="tag">RUNBOOK</span><code>runbooks/article-image-planning-runbook.md</code><p>The planning law: never force images, never re-analyze an already-planned article.</p></div>
+    <div class="node t-file" id="n-imgplan"><span class="tag">DATA</span><code>04-assets/article-images/{id}/plan.json&ensp;+ placement doc</code><p>The machine-readable image plan per article — prompts, filenames, alt text, and exactly where each image goes.</p></div>
+    <div class="node t-code" id="n-ps1"><span class="tag">DRIVER</span><code>run-article-images.ps1</code><p>PowerShell conductor: runs plan → render → finalize as three separate processes (Codex is never launched from inside Claude).</p></div>
+    <div class="node t-ext" id="n-codex"><span class="tag">EXTERNAL AI</span><code>OpenAI Codex CLI&ensp;(codex exec)</code><p>The image generator. Receives each plan's prompt non-interactively and renders the raw image.</p></div>
+    <div class="node t-file" id="n-guideline"><span class="tag">DATA</span><code>04-assets/{brand}-brand-guideline.md&ensp;+&ensp;brand-assets/</code><p>The visual identity extracted from Figma: brand blue #0958D9, the display typeface, and the logo files used for overlays.</p></div>
+    <div class="node t-code" id="n-imgfinal"><span class="tag">ENGINE</span><code>engine/src/article-images.mjs</code><p>The finisher: picks the right logo variant by measuring the image's luminance, overlays it, and compresses — it never regenerates.</p></div>
+    <div class="node t-code" id="n-thumbs"><span class="tag">ENGINE</span><code>engine thumbnails&ensp;(thumbnails.mjs · codex-runner.mjs)</code><p>The blog-card thumbnail pipeline: reads the specs, prompts Codex per page, writes finished thumbnails.</p></div>
+    <div class="node t-file" id="n-thumbfiles"><span class="tag">DATA</span><code>04-assets/thumbnails/</code><p>One cover image per article, pushed to the CMS by <code>sync-thumbnails</code>.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ PUBLISH ═══════════ -->
+<section class="band" id="band-pub">
+  <div class="band-hd"><span class="ph">PUBLISH</span><h2>Publishing &amp; reconcile — ship to the CMS, then let truth flow back</h2></div>
+  <p class="band-sub">The engine converts each reviewed article to the CMS's format and pushes it over the CMS API (idempotent — re-running never duplicates). Then the loop closes: the live CMS and sitemap are the source of truth, and a reconcile command rebuilds the map's status columns from them, so the plan can never drift from reality.</p>
+  <div class="nodes">
+    <div class="node t-code" id="n-publish"><span class="tag">ENGINE</span><code>engine publish&ensp;(publish.mjs)</code><p>Reads a reviewed article + its spec row and orchestrates the push.</p></div>
+    <div class="node t-code" id="n-md2ej"><span class="tag">ENGINE</span><code>md-to-editorjs.mjs</code><p>Converts Markdown into EditorJS blocks + HTML — the two body formats the CMS requires.</p></div>
+    <div class="node t-code" id="n-dorikclient"><span class="tag">ENGINE</span><code>cms-client.mjs&ensp;·&ensp;sync-thumbnails.mjs</code><p>The API client: authenticates, creates or updates each post by slug, attaches the thumbnail as the item's image.</p></div>
+    <div class="node t-ext" id="n-dorik"><span class="tag">CMS API</span><code>Headless CMS&ensp;— Blog collection</code><p>Where articles live once published. Authoritative for item IDs, publish state, and thumbnails.</p></div>
+    <div class="node t-ext" id="n-sitemap"><span class="tag">LIVE SITE</span><code>{site}/blog/sitemap.xml</code><p>The only legitimate source of <code>published_url</code> and <code>publish_date</code> — never guessed, never defaulted to today.</p></div>
+    <div class="node t-code" id="n-reconcile"><span class="tag">ENGINE</span><code>engine reconcile&ensp;(reconcile.mjs)</code><p>Rebuilds the map's lifecycle columns from the CMS + local files. Idempotent, only upgrades, never demotes. Run at the start of every session that touches lifecycle.</p><span class="badge">the anti-drift loop</span></div>
+  </div>
+</section>
+</div><!-- /diagram -->
+
+<!-- ═══════════ APPENDIX ═══════════ -->
+<section class="appendix">
+<h2>The lifecycle: five states, one direction</h2>
+<p>Every row in the topical map is in exactly one state. The state only moves forward, and each transition is owned by one phase. <b>Nothing is published without passing review.</b></p>
+<div class="lifecycle">
+  <span class="lc">planned</span><span class="arrow">→</span>
+  <span class="lc">briefed</span><span class="arrow">→</span>
+  <span class="lc">written</span><span class="arrow">→</span>
+  <span class="lc">reviewed</span><span class="arrow">→</span>
+  <span class="lc pub">published</span>
+</div>
+<p>In the merged pass, <code>written</code> is only a transient blip — articles normally land straight at <code>reviewed</code> because review runs in the same session. And critically, these status columns are a <b>derived cache, not hand-kept truth</b>: if they are ever lost or clobbered, <code>reconcile</code> rebuilds them from the live CMS and the files on disk.</p>
+
+<h2>Who writes what, who reads what</h2>
+<div class="tblwrap"><table>
+  <tr><th>File</th><th>Written by</th><th>Read by</th></tr>
+  <tr><td><code>{name}-brand-foundation.md</code></td><td>Phase 1 (brand-foundation skill), once</td><td>Every later phase, always in full — never summarized into a copy</td></tr>
+  <tr><td><code>competitors/…</code> foundations</td><td>Phase 2, once per competitor</td><td>Topical map, briefs, and review for all comparison/review/best pages</td></tr>
+  <tr><td><code>{name}-review-methodology.md</code></td><td>Once per brand</td><td>Reviewer (computes every verdict score); published once as "How We Review"</td></tr>
+  <tr><td><code>build_map.py</code> → <code>topical-map.csv</code></td><td>The Python builder (structure); the orchestrator (lifecycle columns only)</td><td>Briefs, production, engine convert/publish/thumbnails — the hub of everything</td></tr>
+  <tr><td><code>entity-inventory.csv</code></td><td>Builder initially; <b>rebuilt only by review</b> from finished articles</td><td>Brief and write phases, for cross-article consistency</td></tr>
+  <tr><td><code>linking-anchor-inventory.csv</code></td><td><b>Review only</b></td><td>Briefs (context for the link plan)</td></tr>
+  <tr><td><code>{id}-brief.md</code></td><td>Phase 4, one independent agent per brief</td><td>Research + write agents (intent and required entities — never as a research substitute)</td></tr>
+  <tr><td><code>_scratch/{id}/dossier/</code></td><td>Research agent, once per article</td><td>Write agent and review agent (raw captures only; each re-derives its own judgment)</td></tr>
+  <tr><td><code>_scratch/{id}/adherence.md</code></td><td>The producing agent, before its output</td><td>The adherence-gate hook — no gate file, no saved article</td></tr>
+  <tr><td><code>{id}-content.md</code></td><td>Write agent; then <b>edited in place</b> by review, forever</td><td>Image planner, validator, publish, reconcile</td></tr>
+  <tr><td><code>{name}-specs.jsonl</code></td><td><code>engine convert</code>, from the CSV — never hand-edited</td><td>Engine validate, publish, thumbnails</td></tr>
+  <tr><td><code>plan.json</code> + placement doc</td><td>article-image-plan skill</td><td>PowerShell driver → Codex (render) → article-images.mjs (finish)</td></tr>
+  <tr><td>Headless CMS + live sitemap</td><td><code>engine publish</code> / <code>sync-thumbnails</code></td><td><code>engine reconcile</code>, which writes truth back into the CSV</td></tr>
+</table></div>
+
+<h2>The rules that make the quality repeatable</h2>
+<div class="rulecard"><b>Two rulebooks always load together.</b> Every brief and article obeys its master runbook AND its page-type reference (e.g. <code>PT14-product-review.md</code>). The reference overrides only the structure it names; the master stays authoritative on research integrity and validation. Loading one without the other is a hard error.</div>
+<div class="rulecard"><b>Adherence is machine-enforced.</b> Before an agent may save output, it must write a manifest proving which rulebooks it loaded, plus a checklist attestation. A hook physically blocks the file write until that proof exists. Compliance is not on the honor system.</div>
+<div class="rulecard"><b>No fabrication, ever.</b> Every claim traces to a source fetched in the current session and carries a confidence label. Publish dates come from the live sitemap; product facts from the product-details file; competitor facts from their foundation files or live pages.</div>
+<div class="rulecard"><b>Independence between articles, sharing within one.</b> In a batch, each article's agent does its own ground-up research — no sibling is ever a template. But within one article, research happens exactly once (the dossier) and is shared by writer and reviewer.</div>
+<div class="rulecard"><b>Review is adversarial by design.</b> The reviewer is a stronger model with a cold handoff: it reuses the raw evidence but re-derives every judgment, must beat every live competitor page, and edits the same file in place. High-stakes evaluative pages get an extra 2-vote refute pass.</div>
+<div class="rulecard"><b>Style is validated deterministically.</b> A code validator — not opinion — enforces the mechanical rules: no em/en-dashes in articles, sentence and paragraph caps, a lead sentence before every list or table, every internal link resolving to a real planned URL, each URL used once per page.</div>
+<div class="rulecard"><b>The engine never invents; Claude never publishes by hand.</b> Everything requiring judgment (research, writing, reviewing, image planning) is Claude following rulebooks. Everything requiring exactness (CSV→JSONL, validation, format conversion, API pushes, reconciliation) is deterministic code.</div>
+
+<footer>One brand shown as the worked example — every brand gets its own identical, fully separate file tree under <code>products/{brand}/</code>, so brands never share files. · System designed &amp; built by the author; diagram is a sanitized architecture overview.</footer>
+</section>
+</div>
+
+<script>
+(function(){
+  // type → stroke color
+  var C={rule:'#B07717',data:'#0B7A63',ext:'#AE3760',code:'#33608F',life:'#0958D9',skill:'#6B45B8'};
+  // [from, to, type, dashed, title]
+  var E=[
+    // governance
+    ['n-subpat','n-orch','rule',1,'Pattern H + 5-agent cap govern the orchestrator'],
+    ['n-schema','n-builder','rule',1,'schema defines the CSV columns the builder must emit'],
+    ['n-adherence','n-hook','data',0,'hook checks the gate file exists'],
+    ['n-hook','n-article','rule',1,'BLOCKS saving the article until adherence.md exists'],
+    ['n-hook','n-brief','rule',1,'BLOCKS saving the brief until adherence.md exists'],
+    // phase 1-2
+    ['n-rb-brand','n-sk-brand','rule',1,'runbook governs the skill'],
+    ['n-rb-comp','n-sk-comp','rule',1,'runbook governs the skill'],
+    ['n-ext-web','n-sk-brand','ext',0,'live site + research in'],
+    ['n-ext-web','n-sk-comp','ext',0,'live competitor research in'],
+    ['n-sk-brand','n-brandfound','data',0,'writes the canonical brand file'],
+    ['n-sk-brand','n-proddetails','data',0,'writes product depth'],
+    ['n-sk-brand','n-revmeth','data',0,'brand-level scoring rubric'],
+    ['n-sk-comp','n-compfound','data',0,'writes one pair per competitor'],
+    // phase 3
+    ['n-rb-map','n-sk-map','rule',1,'runbook governs the skill'],
+    ['n-brandfound','n-sk-map','data',0,'read in full'],
+    ['n-compfound','n-sk-map','data',0,'read in full'],
+    ['n-ext-web','n-sk-map','ext',0,'per-query SERP validation'],
+    ['n-sk-map','n-builder','code',0,'edits + re-runs the builder'],
+    ['n-builder','n-map','data',0,'writes the CSV atomically'],
+    ['n-builder','n-entinv','data',0,'initial entity inventory'],
+    ['n-builder','n-mapdocs','data',0,'overview + source log'],
+    ['n-sk-convert','n-convert','rule',1,'triggers'],
+    ['n-map','n-convert','data',0,'CSV in'],
+    ['n-convert','n-specs','data',0,'JSONL out'],
+    // phase 4
+    ['n-rb-brief','n-sk-brief','rule',1,'master runbook'],
+    ['n-refbriefs','n-sk-brief','rule',1,'page-type reference (both always load)'],
+    ['n-map','n-sk-brief','data',0,'the row being briefed + link targets'],
+    ['n-entinv','n-sk-brief','data',0,'entities to cover'],
+    ['n-linkinv','n-sk-brief','data',0,'anchor context (read-only here)'],
+    ['n-brandfound','n-sk-brief','data',0,'brand context in full'],
+    ['n-compfound','n-sk-brief','data',0,'competitor context'],
+    ['n-revmeth','n-sk-brief','data',0,'rubric for evaluative page types'],
+    ['n-ext-web','n-sk-brief','ext',0,'fresh SERP research per brief'],
+    ['n-sk-brief','n-brief','data',0,'writes the blueprint'],
+    ['n-sk-brief','n-map','life',1,'sets status=briefed + Drive link'],
+    // phase 5+6
+    ['n-sk-write','n-orch','rule',1,'triggers the merged pass'],
+    ['n-orch','n-research','skill',1,'dispatch (max 5 concurrent)'],
+    ['n-orch','n-writeagent','skill',1,'dispatch'],
+    ['n-orch','n-reviewagent','skill',1,'dispatch'],
+    ['n-brief','n-research','data',0,'intent + required entities'],
+    ['n-ext-web','n-research','ext',0,'SERP, AI Overview, competitor pages, G2/Reddit'],
+    ['n-research','n-dossier','data',0,'one shared evidence dossier'],
+    ['n-dossier','n-writeagent','data',0,'drafts from raw evidence, no re-fetch'],
+    ['n-dossier','n-reviewagent','data',0,'reuses captures, re-derives judgment'],
+    ['n-rb-write','n-writeagent','rule',1,'writing law'],
+    ['n-refwriters','n-writeagent','rule',1,'page-type playbook'],
+    ['n-rb-review','n-reviewagent','rule',1,'review law (self-contained)'],
+    ['n-refwriters','n-reviewagent','rule',1,'audited against the SAME playbook'],
+    ['n-brandfound','n-writeagent','data',0,'voice + positioning'],
+    ['n-proddetails','n-writeagent','data',0,'authoritative product claims'],
+    ['n-revmeth','n-reviewagent','data',0,'computes the verdict score'],
+    ['n-writeagent','n-adherence','data',0,'manifest + attestation first'],
+    ['n-writeagent','n-article','data',0,'the draft'],
+    ['n-reviewagent','n-article','data',0,'edits IN PLACE, never a new file'],
+    ['n-article','n-validate','code',0,'deterministic final check'],
+    ['n-reviewagent','n-entinv','data',0,'rebuilds from finished articles'],
+    ['n-reviewagent','n-linkinv','data',0,'writes the anchor inventory'],
+    ['n-orch','n-map','life',1,'sets status=reviewed + content link'],
+    // assets
+    ['n-rb-img','n-sk-imgplan','rule',1,'planning law'],
+    ['n-article','n-sk-imgplan','data',0,'reads the finished article'],
+    ['n-sk-imgplan','n-imgplan','data',0,'plan.json + placement doc'],
+    ['n-ps1','n-codex','code',1,'drives codex exec non-interactively'],
+    ['n-imgplan','n-codex','data',0,'prompts + filenames'],
+    ['n-codex','n-imgfinal','ext',0,'raw renders'],
+    ['n-guideline','n-imgfinal','data',0,'logo variant by luminance + brand rules'],
+    ['n-specs','n-thumbs','data',0,'per-page metadata'],
+    ['n-thumbs','n-codex','code',0,'thumbnail prompts'],
+    ['n-codex','n-thumbfiles','ext',0,'rendered thumbnails'],
+    // publish
+    ['n-article','n-publish','data',0,'reviewed article in'],
+    ['n-specs','n-publish','data',0,'url, slug, metadata'],
+    ['n-publish','n-md2ej','code',0,'markdown → EditorJS + HTML'],
+    ['n-md2ej','n-dorikclient','code',0,'payload'],
+    ['n-thumbfiles','n-dorikclient','data',0,'sync-thumbnails attaches covers'],
+    ['n-dorikclient','n-dorik','ext',0,'POST/PUT, idempotent by slug'],
+    ['n-dorik','n-reconcile','ext',0,'authoritative publish state, item ids'],
+    ['n-sitemap','n-reconcile','ext',0,'real published_url + publish_date'],
+    ['n-article','n-reconcile','data',0,'local file ⇒ at least reviewed'],
+    ['n-reconcile','n-map','life',1,'rebuilds lifecycle columns — the loop closes']
+  ];
+  var svg=document.getElementById('edges'), dg=document.getElementById('diagram');
+  var adj={};
+  function draw(){
+    var dr=dg.getBoundingClientRect();
+    var W=dg.scrollWidth,H=dg.scrollHeight;
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.setAttribute('width',W);svg.setAttribute('height',H);
+    var defs='<defs>';
+    Object.keys(C).forEach(function(k){
+      defs+='<marker id="ar-'+k+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="'+C[k]+'"/></marker>';
+    });
+    defs+='</defs>';
+    var out=defs, counts={};
+    E.forEach(function(e){counts[e[0]]=(counts[e[0]]||0)+1;});
+    var used={};
+    E.forEach(function(e,i){
+      var a=document.getElementById(e[0]),b=document.getElementById(e[1]);
+      if(!a||!b)return;
+      var ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();
+      var ax=ra.left-dr.left, ay=ra.top-dr.top, bx=rb.left-dr.left, by=rb.top-dr.top;
+      used[e[0]]=(used[e[0]]||0)+1;
+      var fan=(used[e[0]]-(counts[e[0]]+1)/2)*14;
+      var sx,sy,tx,ty,p;
+      if(by>=ay+ra.height-4){ // target below
+        sx=ax+ra.width/2+fan; sy=ay+ra.height; tx=bx+rb.width/2; ty=by;
+        var dy=Math.max(30,(ty-sy)*0.45);
+        p='M'+sx+' '+sy+'C'+sx+' '+(sy+dy)+' '+tx+' '+(ty-dy)+' '+tx+' '+ty;
+      } else if(ay>=by+rb.height-4){ // target above
+        sx=ax+ra.width/2+fan; sy=ay; tx=bx+rb.width/2; ty=by+rb.height;
+        var dy2=Math.max(30,(sy-ty)*0.45);
+        p='M'+sx+' '+sy+'C'+sx+' '+(sy-dy2)+' '+tx+' '+(ty+dy2)+' '+tx+' '+ty;
+      } else { // roughly same row: side to side
+        if(ax<bx){sx=ax+ra.width;tx=bx;}else{sx=ax;tx=bx+rb.width;}
+        sy=ay+ra.height/2+fan*0.4; ty=by+rb.height/2;
+        var dx=Math.max(24,Math.abs(tx-sx)*0.4)*(tx>sx?1:-1);
+        p='M'+sx+' '+sy+'C'+(sx+dx)+' '+sy+' '+(tx-dx)+' '+ty+' '+tx+' '+ty;
+      }
+      out+='<path data-f="'+e[0]+'" data-t="'+e[1]+'" stroke="'+C[e[2]]+'"'+(e[3]?' stroke-dasharray="5 4"':'')+' marker-end="url(#ar-'+e[2]+')" d="'+p+'"><title>'+e[4]+'</title></path>';
+    });
+    svg.innerHTML=out;
+  }
+  E.forEach(function(e){(adj[e[0]]=adj[e[0]]||[]).push(e[1]);(adj[e[1]]=adj[e[1]]||[]).push(e[0]);});
+  function focus(id){
+    svg.classList.add('focusing');
+    svg.querySelectorAll('path').forEach(function(p){
+      p.classList.toggle('on',p.dataset.f===id||p.dataset.t===id);
+    });
+    document.querySelectorAll('.node').forEach(function(n){
+      n.classList.toggle('lit',n.id===id||(adj[id]||[]).indexOf(n.id)>=0);
+    });
+  }
+  function blur(){
+    svg.classList.remove('focusing');
+    document.querySelectorAll('.node.lit').forEach(function(n){n.classList.remove('lit');});
+  }
+  var pinned=null;
+  document.querySelectorAll('.node').forEach(function(n){
+    n.addEventListener('mouseenter',function(){if(!pinned)focus(n.id);});
+    n.addEventListener('mouseleave',function(){if(!pinned)blur();});
+    n.addEventListener('click',function(ev){
+      ev.stopPropagation();
+      if(pinned===n.id){pinned=null;blur();}
+      else{pinned=n.id;focus(n.id);}
+    });
+  });
+  document.addEventListener('click',function(){if(pinned){pinned=null;blur();}});
+  var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(draw,150);});
+  draw();setTimeout(draw,300);
+})();
+</script>
+
+</body>
+</html>
