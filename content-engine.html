@@ -6,8 +6,7 @@
 <title>Content Engine — System Architecture Map</title>
 <meta name="description" content="An AI-orchestrated, multi-brand SEO content engine: how an AI agent doing every judgment step against machine-enforced rulebooks, plus deterministic code for everything exact, ships publication-grade articles at scale.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://salehin96.github.io/content-engine/content-engine.html">
-<link rel="canonical" href="https://salehin96.github.io/content-engine/content-engine.html">
+<meta property="og:url" content="https://salehin96.github.io/content-engine/">
 <meta property="og:title" content="I designed an AI content engine that runs entire multi-brand content operations">
 <meta property="og:description" content="Interactive system map: AI judgment against machine-enforced rulebooks + deterministic code for everything exact. Hover any node to trace what it reads and writes.">
 <meta property="og:image" content="https://salehin96.github.io/content-engine/og-cover.png">
@@ -96,7 +95,28 @@
   .lc.pub{border-color:var(--accent);color:var(--accent)}
   .arrow{color:var(--ink-3);font-size:15px}
   footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-3)}
+
+  /* cross-page nav */
+  .sitenav{max-width:1240px;margin:0 auto;padding:20px 28px 0;display:flex;flex-wrap:wrap;
+    gap:10px 18px;align-items:center;justify-content:space-between}
+  .sitenav .brand{font-weight:700;color:var(--ink);font-size:14px;letter-spacing:-.01em}
+  .sitenav .navlinks{display:flex;gap:16px;flex-wrap:wrap}
+  .sitenav a{color:var(--ink-2);text-decoration:none;font-size:13.5px;padding-bottom:1px;
+    border-bottom:1px solid transparent}
+  .sitenav a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .sitenav a[aria-current="page"]{color:var(--accent);font-weight:650;border-bottom-color:var(--accent)}
+  .sitenav a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+  @media (max-width:640px){.sitenav{padding-left:18px;padding-right:18px}}
 </style>
+
+<nav class="sitenav">
+  <span class="brand">Riad Us Salehin &middot; Content Engine</span>
+  <span class="navlinks">
+    <a href="./index.html">Overview</a>
+    <a href="./content-engine.html" aria-current="page">System map</a>
+    <a href="./dependency-map.html">Dependency map</a>
+  </span>
+</nav>
 
 <div class="wrap">
 <header class="hero">

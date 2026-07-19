@@ -74,9 +74,28 @@
   .note{margin-top:26px;font-size:13px;color:var(--ink2)}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
   @media (max-width:560px){.wrap{padding:38px 16px 60px}}
+
+  .sitenav{max-width:var(--maxw);margin:0 auto;padding:20px 24px 0;display:flex;flex-wrap:wrap;
+    gap:10px 18px;align-items:center;justify-content:space-between}
+  .sitenav .brand{font-weight:750;color:var(--ink);font-size:14px;letter-spacing:-.01em}
+  .sitenav .navlinks{display:flex;gap:16px;flex-wrap:wrap}
+  .sitenav a{color:var(--ink2);text-decoration:none;font-size:13.5px;padding-bottom:1px;
+    border-bottom:1px solid transparent}
+  .sitenav a:hover{color:var(--phase);border-bottom-color:var(--phase)}
+  .sitenav a[aria-current="page"]{color:var(--phase);font-weight:650;border-bottom-color:var(--phase)}
+  @media (max-width:560px){.sitenav{padding-left:16px;padding-right:16px}}
 </style>
 </head>
 <body>
+<nav class="sitenav">
+  <span class="brand">Riad Us Salehin &middot; Content Engine</span>
+  <span class="navlinks">
+    <a href="./index.html" aria-current="page">Overview</a>
+    <a href="./content-engine.html">System map</a>
+    <a href="./dependency-map.html">Dependency map</a>
+  </span>
+</nav>
+
 <div class="wrap">
   <p class="eyebrow">Systems design &middot; SEO &middot; AI orchestration</p>
   <h1>An SEO content engine that runs on AI agents and refuses to trust them.</h1>
