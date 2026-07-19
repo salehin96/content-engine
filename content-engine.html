@@ -17,14 +17,14 @@
 <body>
 <style>
   :root{
-    --ground:#F6F8FB; --panel:#FFFFFF; --ink:#141D30; --ink-2:#4A5670; --ink-3:#7A86A0;
-    --line:#DCE3EF;
-    --accent:#0958D9;
-    --c-skill:#6B45B8; --c-skill-bg:#F3EEFB; --c-skill-ln:#D8CBEF;
-    --c-rule:#96610A;  --c-rule-bg:#FBF3E4;  --c-rule-ln:#EBD9B4;
-    --c-file:#0B7A63;  --c-file-bg:#E9F6F2;  --c-file-ln:#BFE3D8;
-    --c-code:#33608F;  --c-code-bg:#EDF3FA;  --c-code-ln:#C9DAEC;
-    --c-ext:#AE3760;   --c-ext-bg:#FAEDF1;   --c-ext-ln:#EFC9D6;
+    --ground:#f4f5f9; --panel:#ffffff; --ink:#161a25; --ink-2:#48506a; --ink-3:#7c86a3;
+    --line:#e2e6f0;
+    --accent:#4f46e5;
+    --c-skill:#7c5cd6; --c-skill-bg:#efeafc; --c-skill-ln:#ddd2f8;
+    --c-rule:#b8730a;  --c-rule-bg:#fbeed6;  --c-rule-ln:#f0dcb4;
+    --c-file:#0d8a7a;  --c-file-bg:#d9f2ee;  --c-file-ln:#b6e3da;
+    --c-code:#2563c9;  --c-code-bg:#e7f0fd;  --c-code-ln:#c9ddf8;
+    --c-ext:#c0398b;   --c-ext-bg:#fbe6f2;   --c-ext-ln:#f2c9df;
     --mono:Consolas,"Cascadia Mono",ui-monospace,Menlo,monospace;
   }
   *{box-sizing:border-box}
@@ -107,6 +107,17 @@
   .sitenav a[aria-current="page"]{color:var(--accent);font-weight:650;border-bottom-color:var(--accent)}
   .sitenav a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
   @media (max-width:640px){.sitenav{padding-left:18px;padding-right:18px}}
+
+  .sitefoot{max-width:1240px;margin:0 auto;padding:0 28px 64px}
+  .sitefoot .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:20px 22px;display:flex;flex-wrap:wrap;gap:14px 34px;align-items:flex-start;
+    justify-content:space-between}
+  .sitefoot p{margin:0;font-size:14px;color:var(--ink-2);max-width:56ch}
+  .sitefoot b{color:var(--ink)}
+  .sitefoot .links{display:flex;flex-direction:column;gap:7px;font-size:13.5px}
+  .sitefoot .links a{color:var(--accent);text-decoration:none}
+  .sitefoot .links a:hover{text-decoration:underline}
+  @media (max-width:640px){.sitefoot{padding-left:18px;padding-right:18px}}
 </style>
 
 <nav class="sitenav">
@@ -238,7 +249,7 @@
     <div class="node t-file" id="n-imgplan"><span class="tag">DATA</span><code>04-assets/article-images/{id}/plan.json&ensp;+ placement doc</code><p>The machine-readable image plan per article — prompts, filenames, alt text, and exactly where each image goes.</p></div>
     <div class="node t-code" id="n-ps1"><span class="tag">DRIVER</span><code>run-article-images.ps1</code><p>PowerShell conductor: runs plan → render → finalize as three separate processes (Codex is never launched from inside Claude).</p></div>
     <div class="node t-ext" id="n-codex"><span class="tag">EXTERNAL AI</span><code>OpenAI Codex CLI&ensp;(codex exec)</code><p>The image generator. Receives each plan's prompt non-interactively and renders the raw image.</p></div>
-    <div class="node t-file" id="n-guideline"><span class="tag">DATA</span><code>04-assets/{brand}-brand-guideline.md&ensp;+&ensp;brand-assets/</code><p>The visual identity extracted from Figma: brand blue #0958D9, the display typeface, and the logo files used for overlays.</p></div>
+    <div class="node t-file" id="n-guideline"><span class="tag">DATA</span><code>04-assets/{brand}-brand-guideline.md&ensp;+&ensp;brand-assets/</code><p>The visual identity extracted from the brand's design file: its primary color, the display typeface, and the logo files used for overlays.</p></div>
     <div class="node t-code" id="n-imgfinal"><span class="tag">ENGINE</span><code>engine/src/article-images.mjs</code><p>The finisher: picks the right logo variant by measuring the image's luminance, overlays it, and compresses — it never regenerates.</p></div>
     <div class="node t-code" id="n-thumbs"><span class="tag">ENGINE</span><code>engine thumbnails&ensp;(thumbnails.mjs · codex-runner.mjs)</code><p>The blog-card thumbnail pipeline: reads the specs, prompts Codex per page, writes finished thumbnails.</p></div>
     <div class="node t-file" id="n-thumbfiles"><span class="tag">DATA</span><code>04-assets/thumbnails/</code><p>One cover image per article, pushed to the CMS by <code>sync-thumbnails</code>.</p></div>
@@ -304,10 +315,22 @@
 </section>
 </div>
 
+<div class="sitefoot"><div class="card">
+  <p><b>I build AI-powered SEO content systems for early-stage B2B SaaS:</b> full-scale SEO, semantic
+  topical maps, content briefs, content writing, and end-to-end content automation. This map is a
+  sanitized view of the architecture; client names and proprietary methodology are abstracted.</p>
+  <span class="links">
+    <a href="https://linkedin.com/in/riad-us-salehin/">LinkedIn</a>
+    <a href="https://calendly.com/riad-us-salehin/30min">Book a 30-min call</a>
+    <a href="mailto:salehin.riad96@gmail.com">salehin.riad96@gmail.com</a>
+    <a href="./dependency-map.html">See the dependency map</a>
+  </span>
+</div></div>
+
 <script>
 (function(){
   // type → stroke color
-  var C={rule:'#B07717',data:'#0B7A63',ext:'#AE3760',code:'#33608F',life:'#0958D9',skill:'#6B45B8'};
+  var C={rule:'#b8730a',data:'#0d8a7a',ext:'#c0398b',code:'#2563c9',life:'#4f46e5',skill:'#7c5cd6'};
   // [from, to, type, dashed, title]
   var E=[
     // governance
