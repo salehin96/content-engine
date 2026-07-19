@@ -233,8 +233,8 @@
   <footer class="foot">
     <h2>Reading notes</h2>
     <p><b>Shared rule files are omitted on purpose.</b> Every phase also loads the same governance set,
-      <code>operating-principles.md</code>, <code>tool-capability-map.md</code>,
-      <code>tool-fallback-reference.md</code>, <code>subagent-patterns.md</code>, and the schemas. They
+      research-integrity rules, tool routing, fallback behavior, agent dispatch patterns,
+      and the data schemas. They
       govern <i>how</i> a phase runs, not <i>what</i> it is about, so they are left off the nodes to keep
       each phase's real data inputs legible.</p>
     <p><b>The fetch ladder</b> shown as one tool is really a fallback chain: WebFetch, then Firecrawl,
@@ -242,12 +242,6 @@
     <p><b>Lifecycle and inventories are review-owned.</b> The topical map's status columns, the entity
       inventory, and the linking-anchor inventory are written by the orchestrator and the review phase,
       never by the phase that merely reads them.</p>
-    <div class="disc">
-      <b>One accuracy flag.</b> The project's control file (CLAUDE.md) says the topical map reads
-      "all competitor foundations, in full." The topical-map runbook itself does not: it derives
-      competitors from brand-foundation Section 9 plus Ahrefs, and treats competitor foundation only as
-      an upstream prerequisite. The chart follows the runbook (the real procedure) and marks it a gate.
-    </div>
   </footer>
 </div>
 
@@ -304,11 +298,11 @@ const PHASES = [
   },
   {
     n:"4", title:"Topical Map",
-    produces:"{name}-topical-map.csv (built by build_map.py) then convert to specs.jsonl",
+    produces:"{name}-topical-map.csv (built by a re-runnable script) then convert to specs.jsonl",
     groups:[{ nodes:[
       {nm:"{name}-brand-foundation.md", cat:"engine", r:"full", why:"Primary source. Category and spine, ICP, pains and jobs (entity seeds), competitors, positioning, voice."},
       {nm:"{name}-product-details.md", cat:"engine", r:"full", why:"When present. Features, sub-features, integrations, and pricing become entity seeds for product-led pages."},
-      {nm:"Competitor foundation", cat:"gate", r:"gate", why:"Prerequisite only. The runbook does not read the files; it derives rivals from brand-foundation Section 9 plus Ahrefs."},
+      {nm:"Competitor foundation", cat:"gate", r:"gate", why:"Prerequisite only. Competitors are derived from the brand foundation's competitor section plus organic-competitor data, so these files gate the phase without being read into it."},
       {nm:"review-methodology.md", cat:"gate", r:"gate", why:"Gate for evaluative rows. Its existence lets the builder emit the one How-We-Review row and any review or best pages."},
       {nm:"Ahrefs MCP", cat:"tool", r:"out", why:"Default keyword data: volume, difficulty, and domain intelligence for every candidate query."},
       {nm:"DataForSEO SERP", cat:"tool", r:"out", why:"Validates each query's real SERP, AI Overview, and People Also Ask before a row is kept."},
